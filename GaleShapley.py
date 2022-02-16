@@ -44,22 +44,142 @@ import numpy as np
 """
 Cette fonction sert a lire contenu (liste de chaine de caractere) obtenu par lecture du fichier en donnée representant les préferences des etudiants.
 contenu[0] = nombre d'etudiant dans le fichier
-contenu[0-n] = matrice des preferences des etudiants
+contenu[1-n] = matrice des preferences des etudiants
 
-Argument: list<str>, list<str>
+Argument: 
+    list<st> : données du fichier lu par lectureFichier (PrefEtu.txt)
 return:
-    int,int[][] : nombre etudiants, preferences etudiants
+    int[][] : preferences etudiants
 """
-def prefEtu(etuPrefs):
+def prefEtu(contenu):
+
+    etuPrefs = contenu # copy, idk if its useful or not in python
+
     nbEtu = int(etuPrefs[0])
+    etuPrefs.pop(0)
     
     #matrice de int
-    prefs = np.zeros()
+    prefs = np.zeros([nbEtu, 9], dtype = int) #nbEtu lignes et nbMaster colonne (par l'enoncé on sait qu'il y a 9 masters)
 
 
-    return nbEtu
 
-        
+    for line in etuPrefs :
+        line = line.split()
+        x = int(line[0])
+        for y in range(2, len(line)):
+            #print(y);
+            value = int(line[y])
+            
+            prefs[x][y-2] = value
+
+
+    return prefs
+
+
+"""
+Cette fonction sert a lire contenu (liste de chaine de caractere) obtenu par lecture du fichier en donnée representant les préferences des spécialités.
+contenu[0] = nombre d'etudiant dans le fichier
+contenu[1] = liste des places disponibles pour chaque specialité
+contenu[2-n] = matrice des preferences des specialités
+
+Argument: 
+    list<st> : données du fichier lu par lectureFichier (PrefSpe.txt)
+return:
+    int[][], list<int> : preferences des masters, liste de capacite des masters
+"""
+def prefSpe(contenu):
+
+    spePrefs = contenu # copy, idk if its useful or not in python
+
+    nbEtu = int( (spePrefs[0].split())[1] )
+    spePrefs.pop(0)
+
+    capacite = []
+    cap = spePrefs[0].split()
+    cap.pop(0)
+    for i in cap:
+        capacite.append(i)
+    spePrefs.pop(0)
+    
+    #matrice de int
+    prefs = np.zeros([9, nbEtu], dtype = int) #nbMaster lignes et nbEtu colonne (par l'enoncé on sait qu'il y a 9 masters)
+
+    for line in spePrefs :
+        line = line.split()
+        x = int(line[0])
+        for y in range(2, len(line)):
+            value = int(line[y])
+            
+            prefs[x][y-2] = value
+
+    return prefs, capacite
+
+
+"""
+Cette fonction applique l'algorythme de Gayle-Shapley coté ETUDIANTS pour generer des mariages etudiant-master.
+
+Arguments:
+    int[][] : matrice des preferences des etudiants     (obtenu avec la fonction prefEtu)
+    int[][] : matrice des preferences des masters       (obtenu avec la fonction prefSpe)
+    list<int> : liste des capacites des masters         (obtenu avec la fonction prefSpe)
+
+return:
+    list<int, int> : liste des mariages etudiant-master selon Gayle-Shapley
+
+""" 
+
+def gayle_shapley(prefEtu, prefSpe, capacites) :
+    
+    curr_cap = [0] * len(capacites) #crée une liste de 0 de la taille de capacité (len(curr_cap) == 9 sinon probleme car on a seuelement 9 masters)
+    
+    etuPref = prefEtu #copy de prefEtu
+    
+    mariages = [] #resultat : list<int, int>
+    
+    etu = 0 #etu est l'indice de l'etudiant courant que l'on cherche a placer
+    
+    mariages[0].index(etu) #mariage[0] = 1 tuple -> .index(etu) return position de etu dans le tuple.
+    
+    while etu != -1 : #lorsque tous les etudiants sont placés etu = -1
+        #if(any(etu in  for )
+        #on recup le num du master voulu pour obtenir sa position dans les données
+        demande = prefEtu[0]
+        if (curr_cap[demande] < capacites[demande]) :
+            
+
+    pass
+
+
+"""
+Cette fonction applique l'algorythme de Gayle-Shapley coté MASTERS pour generer des mariages etudiant-master.
+
+Arguments:
+    int[][] : matrice des preferences des etudiants     (obtenu avec la fonction prefEtu)
+    int[][] : matrice des preferences des masters       (obtenu avec la fonction prefSpe)
+    list<int> : liste des capacites des masters         (obtenu avec la fonction prefSpe)
+
+return:
+    list<int, int> : liste des mariages etudiant-master selon Gayle-Shapley
+
+""" 
+
+def gayle_shapley2(prefEtu, prefSpe, capacites) :
+
+
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 #region lecture fichier ---------------------------------------------------------------------------------------------------------------------
